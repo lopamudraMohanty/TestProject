@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TestProject</string>
+    <string name="loading_msg">Loading data...</string>
+    <string name="internet_connectivity_error">Unable to connect.Please check your network connection and try again.</string>
+    <string name="ok">OK</string>
+    <string name="nodata_found_msg">No data found</string>
+</resources>
