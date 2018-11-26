@@ -56,13 +56,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     newFragment.setData(country.getProfile());
                     ((SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout)).setRefreshing(false);
 
-                }else if(!Util.hasNetwork(MainActivity.this)) {
+                }else if(!Util.hasNetwork(MainActivity.this.getApplicationContext())) {
                     Util.showOKAlert(MainActivity.this, "", MainActivity.this.getResources().getString(R.string.internet_connectivity_error));
                 }
             }
         });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Util.dismissDialog();
+    }
 
     @Override
     public void onRefresh() {

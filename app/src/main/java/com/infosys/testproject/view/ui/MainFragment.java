@@ -62,12 +62,12 @@ public class MainFragment extends Fragment{
 
     public void setData(ArrayList<CountryProfile> list)
     {
-        if(list != null) {
+        if(list != null && list.size() != 0) {
             mAdapter.setData(list);
             binding.setIsLoading(false);
         }else {
             //show toast for no data
-            binding.loadingProjects.setText(getActivity().getResources().getString(R.string.nodata_found_msg));
+            binding.loadingData.setText(getActivity().getResources().getString(R.string.nodata_found_msg));
         }
 
     }

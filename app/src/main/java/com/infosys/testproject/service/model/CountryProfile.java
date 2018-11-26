@@ -17,12 +17,12 @@ public class CountryProfile {
     private String title ;
     private String description;
     private String imageHref;
-    private Boolean hasTitle = (title == null || title.isEmpty())?false:true;
-    private Boolean hasDesc = (description == null || title.isEmpty())?false:true;
-    private Boolean hasImageHref = (imageHref == null || title.isEmpty())?false:true;
+    private Boolean hasTitle = false;
+    private Boolean hasDesc = false;
+    private Boolean hasImageHref = false;
 
     public String getTitle() {
-        return title;
+        return (title == null)? "":title;
     }
 
     public void setTitle(String title) {
@@ -30,7 +30,7 @@ public class CountryProfile {
     }
 
     public String getDescription() {
-        return description;
+        return (description == null)?"":description;
     }
 
     public void setDescription(String description) {
@@ -38,7 +38,7 @@ public class CountryProfile {
     }
 
     public String getImageHref() {
-        return imageHref;
+        return (imageHref==null)?"":imageHref;
     }
 
     public void setImageHref(String imageHref) {

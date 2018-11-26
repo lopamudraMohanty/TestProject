@@ -2,6 +2,7 @@ package com.infosys.testproject.view.adapter;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.Handler;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +27,7 @@ import java.util.List;
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder> {
 
     private List<CountryProfile> list;
-
+    final Handler handler = new Handler();
     @Override
     public ListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -51,44 +52,61 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListViewHolder
         return 0;
     }
 
-    public void setData(List<CountryProfile> profilelist)
+    public void setData(final List<CountryProfile> profilelist)
     {
         if(this.list == null) {
             list = profilelist;
             notifyItemRangeInserted(0, profilelist.size());
         }else {
-            DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            new Thread(new Runnable() {
                 @Override
-                public int getOldListSize() {
-                    return ListAdapter.this.list.size();
-                }
+                public void run() {
+                    final DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                        @Override
+                        public int getOldListSize() {
+                            return ListAdapter.this.list.size();
+                        }
 
-                @Override
-                public int getNewListSize() {
-                    return ListAdapter.this.list.size();
-                }
+                        @Override
+                        public int getNewListSize() {
+                            return profilelist.size();
+                        }
 
-                @Override
-                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                    return ListAdapter.this.list.get(oldItemPosition).getTitle() ==
-                            ListAdapter.this.list.get(newItemPosition).getTitle();
-                }
+                        @Override
+                        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                            String oldItemTitle = ListAdapter.this.list.get(oldItemPosition).getTitle();
+                            String newItemTitle = profilelist.get(newItemPosition).getTitle();
+                            return oldItemTitle.equals(
+                                    newItemTitle);
+                        }
 
-                @Override
-                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                    CountryProfile newdata = ListAdapter.this.list.get(newItemPosition);
-                    CountryProfile olddata = ListAdapter.this.list.get(oldItemPosition);
+                        @Override
+                        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                            CountryProfile newdata = profilelist.get(newItemPosition);
+                            CountryProfile olddata = ListAdapter.this.list.get(oldItemPosition);
 
-                    return newdata.getTitle()==olddata.getTitle()
-                            && newdata.getDescription()== olddata.getDescription()
-                            && newdata.getImageHref()== olddata.getImageHref();
-                }
-            });
-            this.list = profilelist;
-            result.dispatchUpdatesTo(this);
+                            return newdata.getTitle().equals(olddata.getTitle())
+                                    && newdata.getDescription().equals(olddata.getDescription())
+                                    && newdata.getImageHref().equals(olddata.getImageHref());
+                        }
+                    });
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            applyDiffResult(profilelist, result);
+                        }
+                    });
+                }}).start();
+
+
         }
     }
-
+   private void applyDiffResult(List<CountryProfile> newItems, DiffUtil.DiffResult diffResult)
+   {
+       diffResult.dispatchUpdatesTo(ListAdapter.this);
+       this.list.clear();
+       this.list.addAll(newItems);
+   }
 
 
     public static class ListViewHolder extends RecyclerView.ViewHolder{

@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.view.View;
 
 import com.infosys.testproject.R;
+import com.infosys.testproject.service.model.Country;
 
 /**
  * Created by LOPA on 11/24/2018.
@@ -16,6 +17,7 @@ import com.infosys.testproject.R;
 
 public class Util {
     public static AlertDialog alertDialog = null;
+
 
     /**
      * @Purpose : This methods are used to show Alert with Ok button
@@ -56,5 +58,16 @@ public class Util {
             return true;
         }
         return false;
+    }
+
+    public static void dismissDialog()
+    {
+
+        if (alertDialog != null) {
+            if (alertDialog.isShowing()) {
+                alertDialog.dismiss();
+            }
+            alertDialog = null;
+        }
     }
 }
